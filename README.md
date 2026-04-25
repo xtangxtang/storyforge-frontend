@@ -1,31 +1,13 @@
-# Storyforge
+# Storyforge Frontend
 
-AI-powered short video creation tool. Turn a simple idea into a 1-2 minute video.
-
-## Workflow
-
-```
-创意提示词 → 策划 → 编剧 → 资产 → 分镜 → 出视频 → 出片
-```
-
-## Architecture
-
-4-Agent system orchestrated by a DirectorAgent:
-
-```
-                    DirectorAgent (orchestrator)
-                    ├── PlanningAgent (创意策划)
-                    ├── ScriptAgent (编剧 + 资产提取)
-                    └── ProductionAgent (分镜 + 视频 + 出片)
-```
+React Native app for Storyforge — an AI-powered short video creation tool.
 
 ## Tech Stack
 
-- **Runtime**: Node.js 18+
-- **Framework**: Express 5 + TypeScript
-- **Database**: SQLite (better-sqlite3 + knex)
-- **Validation**: Zod
-- **File Storage**: Local filesystem
+- **Framework**: Expo + React Native
+- **Navigation**: React Navigation (Stack)
+- **State Management**: Zustand
+- **Language**: TypeScript
 
 ## Quick Start
 
@@ -33,69 +15,62 @@ AI-powered short video creation tool. Turn a simple idea into a 1-2 minute video
 # Install dependencies
 npm install
 
-# Run database migrations
-npm run db:migrate
+# Start Expo dev server
+npx expo start
 
-# Start dev server (port 3000)
-npm run dev
+# Run on Android
+npx expo start --android
+
+# Run on iOS
+npx expo start --ios
 ```
 
-## API Reference
+## Screens
 
-| Method | Path | Description |
+| Screen | Path | Description |
 |--------|------|-------------|
-| GET | `/health` | Health check |
-| GET | `/files/*` | Static file access |
-| POST | `/api/projects` | Create project |
-| GET | `/api/projects` | List projects |
-| GET | `/api/projects/:id` | Get project |
-| DELETE | `/api/projects/:id` | Delete project |
-| PATCH | `/api/projects/:id/state` | Update project state |
-| POST | `/api/projects/:id/brief` | Generate brief |
-| GET | `/api/projects/:id/brief` | Get brief |
-| POST | `/api/projects/:id/script` | Generate script |
-| GET | `/api/projects/:id/script` | Get script |
-| GET | `/api/projects/:id/assets` | List assets |
-| POST | `/api/projects/:id/assets` | Create asset |
-| GET | `/api/projects/:id/storyboards` | List storyboards |
-| POST | `/api/projects/:id/storyboards` | Create storyboard |
-| POST | `/api/projects/:id/videos` | Trigger video generation |
-| GET | `/api/projects/:id/videos` | List video clips |
-| GET | `/api/tasks` | List tasks |
-| GET | `/api/templates` | List templates |
+| ProjectList | `/` | List all projects, create new |
+| CreateProject | `/create` | Enter idea, select template |
+| ProjectDetail | `/project/:id` | Card-based workflow view |
+| Settings | `/settings` | Model vendor configuration |
 
 ## Project Structure
 
 ```
-storyforge/
+storyforge-frontend/
+├── App.tsx                       # Root app with navigation
 ├── src/
-│   ├── app.ts                    # Express app entry
-│   ├── config/                   # Configuration
-│   ├── core/                     # Agent framework
-│   ├── lib/                      # Database & migrations
-│   ├── routes/                   # API route handlers
+│   ├── api/                      # API client & endpoints
+│   ├── components/               # Reusable UI components
+│   ├── screens/                  # Page screens
+│   ├── store/                    # Zustand state stores
 │   ├── types/                    # TypeScript types
-│   └── utils/                    # Utilities
-├── data/
-│   ├── db/                       # SQLite database
-│   ├── projects/                 # Per-project files
-│   └── templates/                # Preset templates
+│   └── config.ts                 # API base URL
+├── app.json
 └── package.json
 ```
 
-## Scripts
+## Components
 
-```bash
-npm run dev          # Start dev server with hot reload
-npm run build        # Compile TypeScript
-npm run start        # Run production build
-npm run db:migrate   # Run database migrations
-npm run db:reset     # Reset database
+| Component | Description |
+|-----------|-------------|
+| Card | Generic card with confirm/redo actions |
+| ProgressBar | Progress indicator for generation stages |
+| TemplateCard | Horizontal scrollable template card |
+
+## Configuration
+
+Set the backend API URL in `src/config.ts`:
+
+```ts
+export const API_BASE_URL = __DEV__
+  ? 'http://localhost:3000'
+  : 'https://your-production-url.com';
 ```
 
 ## Related
 
-- [Frontend](https://github.com/xtangxtang/storyforge-frontend) — React Native app
+- [Backend](https://github.com/xtangxtang/storyforge) — Express API server
 
 ## License
 
